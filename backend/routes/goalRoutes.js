@@ -1,7 +1,7 @@
 const express = require("express");
 var router = express.Router();
 const authMiddleware = require;
-const { addGoal, getGoals, shareGoal } = require("../contorllers/goal");
+const { addGoal, getGoals, shareGoal } = require("../controllers/goal");
 
 //goals routes
 router.use(authMiddleware);

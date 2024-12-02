@@ -4,7 +4,7 @@ const {
   acceptFriendReq,
   getFriends,
   removeFriends,
-} = require("../contorllers/friend");
+} = require("../controllers/friend");
 const authMiddleware = require("../authMiddleware");
 var router = express.Router();
 
