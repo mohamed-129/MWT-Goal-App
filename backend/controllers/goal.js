@@ -1,10 +1,17 @@
-const goal = require("../models/goal");
+const Goal = require("../models/goal");
+const { validationResult } = require("express-validator")
 
 const addGoal = async (req, res) => {
+  // Check for validation errors
+  const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+  // Create goal
   try {
     const { title, description, deadline } = req.body;
-    const goal = await goal.create({ ...req.body, user: req.user.id });
-    res.statis(201).json(goal);
+    const newGoal = await goal.create({ ...req.body, user: req.user.id });
+    res.status(201).json(goal);
   } catch (err) {
     res.status(500).json({ err: "Error adding goal" });
   }
@@ -26,7 +33,7 @@ const shareGoal = async (req, res) => {
     const goal = await goal.findById(goalId);
 
     if (!goal || goal.user.toString() !== req.user.id) {
-      return res.sattus(404).json({ message: "Goal not found" });
+      return res.status(404).json({ message: "Goal not found" });
     }
 
     //push friend to sharedWidth array

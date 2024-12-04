@@ -1,0 +1,55 @@
+/* Styles for the Nav bar */
+nav {
+    padding: 0.5rem;
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+nav ul li {
+    position: relative;
+    background-color: #333;
+    border-radius: 10px;
+    margin: 10px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: white;
+    padding: 0.5rem 1rem;
+    display: block;
+}
+
+nav ul li a:hover {
+    background-color: #555;
+    border-radius: 10px;
+}
+/* Styles for the Dropdown menu */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    top: 100%;
+    left: 0;
+    background-color: #444;
+    border-radius: 10px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #333;
+    z-index: 1000;
+}
+
+.dropdown-menu li a:hover {
+    background-color: #666;
+}
+
+li.dropdown:hover .dropdown-menu {
+    display: block;
+    opacity: 1;
+}

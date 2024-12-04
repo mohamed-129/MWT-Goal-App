@@ -1,0 +1,26 @@
+extends layout 
+
+block content
+    //- Loop through and display errors
+    if errors
+        each error in errors 
+            p(style="color:red") #{error.msg}
+
+    h1 Add Goal 
+    //- Create for goal and post to express route
+    form(method="POST", action="/goals/add")
+        //- Create input elements based on model
+        .form-group
+            label Title:
+            input.form-control(type="text", name="title")
+
+        .form-group
+            label Description:
+            br
+            textarea.form-control(name="description" rows="4")
+
+        .form-group
+            label Deadline: 
+            input.form-control(type="date", name="deadline")
+
+        input.btn.btn-primary(type="submit", value="Submit")
