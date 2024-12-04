@@ -53,3 +53,9 @@ li.dropdown:hover .dropdown-menu {
     display: block;
     opacity: 1;
 }
+
+.checkmark {
+    display: inline;
+    color: green;
+    font-size: 20px;
+}
