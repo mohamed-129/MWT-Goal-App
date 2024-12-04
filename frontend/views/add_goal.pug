@@ -1,0 +1,39 @@
+extends layout 
+
+block content
+
+    h1 Add Goal 
+    //- Create for goal and post to express route
+    form(method="POST", action="/api/goals/add")
+        //- Create input elements based on model
+        .form-group
+            label Title:
+            input.form-control(type="text" name="title" value=goalTitle)
+            //- Show error if title validation failed
+            if errors && errors.some(e => e.path === 'title')
+                span(style="color: red;") #{errors.find(e => e.path === 'title').msg}
+            else if goalTitle
+                span.checkmark &#10004
+
+        .form-group
+            label Description:
+            br
+            textarea.form-control(name="description" rows="4")=goalDescription
+            //- Show error if description validation failed
+            if errors && errors.some(e => e.path === 'description')
+                span(style="color: red;") #{errors.find(e => e.path === 'description').msg}
+            //- If value is empty show no checkmark
+            else if goalDescription
+                span.checkmark &#10004
+
+        .form-group
+            label Deadline: 
+            input.form-control(type="date", name="deadline" value=goalDeadline)
+            //- Show error if deadline validation failed
+            if errors && errors.some(e => e.path === 'deadline')
+                span(style="color: red;") #{errors.find(e => e.path === 'deadline').msg}
+            //- If value is empty show no checkmark
+            else if goalDeadline
+                span.checkmark &#10004
+
+        input.btn.btn-primary(type="submit", value="Submit")
