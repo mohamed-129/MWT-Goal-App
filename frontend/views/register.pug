@@ -1,0 +1,36 @@
+extends layout
+
+block content
+    h1 Register for Aspire
+
+    //- Form for registering
+    form(method="POST", action="/api/auth/register")
+        .form-group
+            label(for="username") Username:
+            input.form-control(type="text" id="username" name="username" required)
+            if errors && errors.some(e => e.path === 'username')
+                span(style="color: red;") #{errors.find(e => e.path === 'username').msg}
+            else
+                span.checkmark &#10004
+
+        .form-group
+            label(for="email") Email:
+            input.form-control(type="email" id="email" name="email" required)
+            if errors && errors.some(e => e.path === 'email')
+                span(style="color: red;") #{errors.find(e => e.path === 'email').msg}
+            else
+                span.checkmark &#10004
+
+        .form-group
+            label(for="password") Password:
+            input.form-control(type="password" id="password" name="password" required)
+            if errors && errors.some(e => e.path === 'password')
+                span(style="color: red;") #{errors.find(e => e.path === 'password').msg}
+            else
+                span.checkmark &#10004
+
+        input.btn.btn-primary(type="submit", value="Register")
+
+    //- Link to login if the user already has an account
+    p
+        a(href="/api/auth/login") Already have an account? Login
