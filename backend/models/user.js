@@ -18,6 +18,12 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    resetToken: {
+      type: String,
+    },
+    resetTokenExpiry: {
+      type: Date, 
+    },
   },
   { timestamps: true }
 );
@@ -28,5 +34,9 @@ userSchema.pre("save", async function (next) {
   this.password = await bcrypt.hash(this.password, 10);
   next();
 });
+
+userSchema.methods.comparePassword = async function (inputPassword) {
+  return bcrypt.compare(inputPassword, this.password);
+};
 
 module.exports = mongoose.model("User", userSchema);
