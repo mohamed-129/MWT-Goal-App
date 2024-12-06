@@ -28,6 +28,7 @@ nav ul li a:hover {
     background-color: #555;
     border-radius: 10px;
 }
+
 /* Styles for the Dropdown menu */
 .dropdown-menu {
     display: none;
@@ -53,9 +54,122 @@ li.dropdown:hover .dropdown-menu {
     display: block;
     opacity: 1;
 }
+/*                  Add Goal Css Styling                      */
 
-.checkmark {
-    display: inline;
-    color: green;
+/* Container Layout */
+.addGoalContainer {
+    display: flex;
+    gap: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    margin-top: 40px;
+}
+
+/* Form Section Styling */
+.formSection {
+    flex: 1;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.formSection h1 {
+    text-align: center;
+}
+
+/* Info Section Styling */
+.infoSection {
+    display: flex;
+    flex: 0.8;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: start;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.infoSection h2 {
     font-size: 20px;
+    margin-bottom: 15px;
+}
+
+.infoSection ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+.infoSection li {
+    margin-bottom: 10px;
+}
+
+.infoSection img {
+    width: 250px;
+    height: 200px;
+    margin: auto;
+    padding: auto;
+    justify-content: center;
+}
+
+/* Form Group Styling */
+.formSection .form-group {
+    margin-bottom: 15px;
+}
+
+.formSection label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+input.form-control,
+textarea.form-control {
+    width: 95%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: none;
+}
+
+input.form-control:focus,
+textarea.form-control:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Checkmark Styling */
+span.checkmark {
+    color: green;
+    font-size: 16px;
+    margin-left: 10px;
+}
+
+/* Error Message Styling */
+span[style="color: red;"] {
+    font-size: 14px;
+    margin-top: 5px;
+    display: inline-block;
+}
+
+/* Submit Button Styling */
+input.btn-primary {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    border: none;
+    color: white;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+input.btn-primary:hover {
+    background-color: #0056b3;
 }
