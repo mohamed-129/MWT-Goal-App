@@ -1,11 +1,10 @@
-const Goal = require("../models/goal"); // Correct model name: `Goal` with a capital 'G'
+const Goal = require("../models/goal");
 
 const addGoal = async (req, res) => {
   try {
     const { title, description, deadline } = req.body;
-    // Create a new goal and associate it with the logged-in user (req.user.id)
     const goal = await Goal.create({ ...req.body, user: req.user.id });
-    res.status(201).json(goal); // Fixed typo from 'statis' to 'status'
+    res.status(201).json(goal);
   } catch (err) {
     res.status(500).json({ err: "Error adding goal" });
     console.log(req.user);
@@ -28,7 +27,7 @@ const shareGoal = async (req, res) => {
     const goal = await Goal.findById(goalId);
 
     if (!goal || goal.user.toString() !== req.user.id) {
-      return res.status(404).json({ message: "Goal not found" }); // Fixed typo from 'sattus' to 'status'
+      return res.status(404).json({ message: "Goal not found" });
     }
 
     // Push the friend's ID to the sharedWith array if not already present
