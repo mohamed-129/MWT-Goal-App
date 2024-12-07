@@ -54,8 +54,81 @@ li.dropdown:hover .dropdown-menu {
     display: block;
     opacity: 1;
 }
-/*                  Add Goal Css Styling                      */
+/*                  Home Page CSS Styling                     */
+/* Home Page Container */
+.homePageContainer {
+    text-align: center;
+    padding: 20px;
+    margin: 0 auto;
+    max-width: 800px;
+    background-color: #f4f4f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
 
+/* Heading Styling */
+.homePageContainer h1 {
+    font-size: 2.5em;
+    color: #007bff;
+    margin-bottom: 20px;
+}
+
+/* Paragraph Styling */
+.homePageContainer p {
+    font-size: 1.2em;
+    margin-bottom: 30px;
+    color: #555;
+}
+/* Quote Styling */
+.quote {
+    font-size: 1.5em;
+    font-style: italic;
+    margin-top: 20px;
+    color: #333;
+}
+
+.author {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-top: 10px;
+    color: #555;
+}
+/* Styling for the Banner Container */
+.banner {
+    display: flex;
+    position: relative; /* Position the container relative to allow absolute positioning of the logo */
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: auto;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+/* Styling for the Banner Halves */
+.banner .half1 img,
+.banner .half2 img {
+    width: 100%;
+    height: 200px;
+    border-radius: 0;
+}
+
+/* Styling for the Logo */
+.banner .logo {
+    position: absolute; /* Position the logo in front of the banners */
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust for centering */
+    z-index: 1; /* Ensure the logo appears above other elements */
+}
+
+.banner .logo img {
+    width: 150px;
+    height: auto;
+    border-radius: 50%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
+}
+/*                  Add Goal CSS Styling                      */
 /* Container Layout */
 .addGoalContainer {
     display: flex;

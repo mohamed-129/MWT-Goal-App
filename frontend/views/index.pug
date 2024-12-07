@@ -1,4 +1,15 @@
-extends layout 
+extends layout
 
-block content 
-    h1 Welcome to #{title}
+block content
+    .banner
+        .half1
+            img(src="/images/Banner1.png", alt="1half")
+        .half2
+            img(src="/images/Banner2.png", alt="half")
+        .logo
+            img(src="/images/AspireLogo.png", alt="Aspire Logo")
+    .homePageContainer
+        h1 Welcome to #{title}
+        p This is your go-to platform for managing your goals and tracking progress effortlessly. Start achieving your dreams today!
+        p.quote "#{quote}"
+        p.author - "#{author}"
