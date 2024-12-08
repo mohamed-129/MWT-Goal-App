@@ -14,9 +14,11 @@ router.get("/", async (req, res) => {
 
     console.log(response.data)
     // Extract quote and author from the response
-    const quoteData = response.data
+    const quoteData = response.data[0];
     const quote = quoteData.quote || "Stay inspired!";
     const author = quoteData.author || "Unknown";
+
+    console.log("Rendered Data:", quote, author)
 
     res.render("index", { 
       title: "Aspire", 
