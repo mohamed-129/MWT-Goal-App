@@ -23,13 +23,14 @@ router
     .route("/")
     .get((req, res) => {
         // Query MongoDB for goals
-        Goal.find({ user: req.user.id}) // Return goals belonging to user
+        Goal.find({}) // Return goals belonging to user
             .then((goals) => {
                 console.log("Fetched Goals:", goals)
                 // Pass goals to view_goals
                 res.render("view_goals", {
                     title: "Goals",
                     goals: goals,
+                    user: "Your_Name",
                 })
             })
             .catch((err) => {
