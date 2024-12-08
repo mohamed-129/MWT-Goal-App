@@ -1,0 +1,41 @@
+extends layout 
+
+block content
+    .addGoalContainer
+        .formSection
+            h1 Add Goal
+            form(method="POST", action="/api/goals/add")
+                .form-group
+                    label Title:
+                    input.form-control(type="text" name="title" value=goalTitle)
+                    if errors && errors.some(e => e.path === 'title')
+                        span(style="color: red;") #{errors.find(e => e.path === 'title').msg}
+                    else if goalTitle
+                        span.checkmark &#10004
+
+                .form-group
+                    label Description:
+                    textarea.form-control(name="description" rows="4")=goalDescription
+                    if errors && errors.some(e => e.path === 'description')
+                        span(style="color: red;") #{errors.find(e => e.path === 'description').msg}
+                    else if goalDescription
+                        span.checkmark &#10004
+
+                .form-group
+                    label Deadline:
+                    input.form-control(type="date", name="deadline" value=goalDeadline)
+                    if errors && errors.some(e => e.path === 'deadline')
+                        span(style="color: red;") #{errors.find(e => e.path === 'deadline').msg}
+                    else if goalDeadline
+                        span.checkmark &#10004
+
+                input.btn.btn-primary(type="submit", value="Submit")
+
+        .infoSection
+            h2 Form Instructions
+            p Use the following guidelines to fill out the form:
+            ul
+                li **Title**: Enter a short, descriptive name for your goal.
+                li **Description**: Provide additional details about your goal.
+                li **Deadline**: Choose a date that you'd like to assign for the completion of your goal
+            img(src="/images/AspireLogo.png", alt="logo")
