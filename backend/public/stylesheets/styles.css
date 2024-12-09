@@ -246,3 +246,66 @@ input.btn-primary {
 input.btn-primary:hover {
     background-color: #0056b3;
 }
+<<<<<<< HEAD
+
+
+=======
+/*                View Goal CSS Styling                  */
+/* Container for Goals */
+.goalsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center; 
+    padding: 20px;
+}
+.viewGoals {
+    text-align: center;
+}
+/* Individual Goal Box */
+.goalBox {
+    background-color: #f4f4f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 300px;
+    text-align: left;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+/* Hover Effect */
+.goalBox:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Goal Title */
+.goalBox h3 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    color: #007bff;
+}
+
+/* Goal Description */
+.goalBox p {
+    font-size: 1em;
+    margin-bottom: 10px;
+    color: #555;
+}
+
+/* Goal Deadline */
+.goalBox p:last-of-type {
+    font-weight: bold;
+    font-size: 0.9em;
+    color: #333;
+}
+
+/* Message for No Goals */
+.noGoals {
+    text-align: center;
+    font-size: 1.2em;
+    color: #888;
+    margin-top: 20px;
+}
+>>>>>>> 13f1ddfd2cea7fef11c9e8ae9c599037ddf175a5

@@ -1,3 +1,17 @@
 extends layout 
 
-block content 
+block content
+    //- Add user's name before the title
+    h1.viewGoals #{user} #{title}
+
+    //- Check if there are any goals
+    if goals && goals.length
+        .goalsContainer
+            //- Loop through all goals
+            each goal in goals
+                .goalBox
+                    h3 #{goal.title}
+                    p #{goal.description}
+                    p #{goal.deadline}
+    else
+        p.noGoals No goals found.
