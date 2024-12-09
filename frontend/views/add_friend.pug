@@ -1,0 +1,21 @@
+extends layout
+
+block content
+  h2 Add Friend
+
+
+
+  form( action="/api/friends/request", method="POST")
+    // Dropdown to select a friend
+    select(name="friendId" id="friendDropdown")
+      option(value="") Select a Friend
+      each user in users
+        option(value=user._id)= user.username
+
+    // OR Input to manually type a username
+    p OR
+    input(type="text" name="username" placeholder="Type username to add")
+
+    button(type="submit") Send Friend Request
+
+

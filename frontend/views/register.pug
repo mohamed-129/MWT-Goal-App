@@ -2,10 +2,18 @@ extends layout
 
 block content
 
-    h1 Login to Aspire
+    h1 Register for Aspire
 
-    //- Form for logging in
-    form(method="POST", action="/api/auth/login")
+    //- Form for registering
+    form(method="POST", action="/api/auth/register")
+        .form-group
+            label(for="username") Username:
+            input.form-control(type="text" id="username" name="username" required)
+            if errors && errors.some(e => e.path === 'username')
+                span(style="color: red;") #{errors.find(e => e.path === 'username').msg}
+            else
+                span.checkmark &#10004
+
         .form-group
             label(for="email") Email:
             input.form-control(type="email" id="email" name="email" required)
@@ -22,18 +30,17 @@ block content
             else
                 span.checkmark &#10004
 
-        input.btn.btn-primary(type="submit", value="Login")
+        input.btn.btn-primary(type="submit", value="Register")
 
-    //- Link to "Forgot Password"
+    //- Link to login if the user already has an account
     p
-        a(href="/api/auth/forgot-password") Forgot your password?
+        a(href="/api/auth/login") Already have an account? Login
 
-    //- Link to register if the user does not have an account
-    p
-        a(href="/api/auth/register") Don't have an account? Register
-
-  h1 Login
-  form#loginForm(action="/api/auth/login", method="POST")
+  h1 Register
+  form(action="/api/auth/register", method="POST")
+    div
+      label(for="username") Username:
+      input(type="text", id="username", name="username", required)
     div
       label(for="email") Email:
       input(type="email", id="email", name="email", required)
@@ -41,9 +48,7 @@ block content
       label(for="password") Password:
       input(type="password", id="password", name="password", required)
     div
-      button(type="submit") Login
+      button(type="submit") Register
   p
-    a(href="/api/auth/register") Don't have an account? Register here
-
-
+    a(href="/api/auth/login") Already have an account? Login here
 
