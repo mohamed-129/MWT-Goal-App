@@ -1,24 +1,24 @@
 const Goal = require("../models/goal");
-const { validationResult } = require("express-validator")
+const { validationResult } = require("express-validator");
 
 const addGoal = async (req, res) => {
   // Check for validation errors
   const errors = validationResult(req);
-  const formData = req.body
+  const formData = req.body;
   // Debugging
-  console.log('Title:', formData.title)
-  console.log('Description:', formData.description)
-  console.log('Deadline:', formData.deadline)
-    if (!errors.isEmpty()) {
-      console.log(errors.errors)
-      // Render the add goal page with error data
-      return res.render("add_goal", {
-        errors: errors.errors,
-        goalTitle: formData.title,
-        goalDescription: formData.description,
-        goalDeadline: formData.deadline
-      })
-    }
+  console.log("Title:", formData.title);
+  console.log("Description:", formData.description);
+  console.log("Deadline:", formData.deadline);
+  if (!errors.isEmpty()) {
+    console.log(errors.errors);
+    // Render the add goal page with error data
+    return res.render("add_goal", {
+      errors: errors.errors,
+      goalTitle: formData.title,
+      goalDescription: formData.description,
+      goalDeadline: formData.deadline,
+    });
+  }
   // Create goal if no errors
   try {
     const { title, description, deadline } = req.body;
@@ -26,12 +26,13 @@ const addGoal = async (req, res) => {
     res.status(201).json(newGoal);
   } catch (err) {
     res.status(500).json({ err: "Error adding goal" });
+    console.log(req.user);
   }
 };
 
 const getGoals = async (req, res) => {
   try {
-    const goals = await goal.find({ user: req.user.id });
+    const goals = await Goal.find({ user: req.user.id });
     res.json(goals);
   } catch (err) {
     res.status(500).json({ err: "Error fetching goals" });
@@ -42,13 +43,13 @@ const shareGoal = async (req, res) => {
   try {
     const { goalId, friendId } = req.body;
 
-    const goal = await goal.findById(goalId);
+    const goal = await Goal.findById(goalId);
 
     if (!goal || goal.user.toString() !== req.user.id) {
       return res.status(404).json({ message: "Goal not found" });
     }
 
-    //push friend to sharedWidth array
+    // Push the friend's ID to the sharedWith array if not already present
     if (!goal.sharedWith.includes(friendId)) {
       goal.sharedWith.push(friendId);
     }
@@ -56,8 +57,27 @@ const shareGoal = async (req, res) => {
     await goal.save();
     res.json({ message: "Goal shared" });
   } catch (err) {
-    res.status(500).json({ err: "error sharing goal" });
+    res.status(500).json({ err: "Error sharing goal" });
   }
 };
 
-module.exports = { addGoal, getGoals, shareGoal };
+const getSharedGoals = async (req, res) => {
+  try {
+    // Find all goals where the logged-in user's ID is in the sharedWith array
+    const sharedGoals = await Goal.find({
+      sharedWith: req.user.id, // Check if the user ID is in the sharedWith array
+    });
+
+    // If no shared goals are found, return an error message
+    if (sharedGoals.length === 0) {
+      return res.status(404).json({ message: "No shared goals found" });
+    }
+
+    // Return the shared goals to the user
+    res.json(sharedGoals);
+  } catch (err) {
+    res.status(500).json({ err: "Error fetching shared goals" });
+  }
+};
+
+module.exports = { addGoal, getGoals, shareGoal, getSharedGoals };
