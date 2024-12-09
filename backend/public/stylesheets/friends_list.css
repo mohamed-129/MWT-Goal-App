@@ -1,0 +1,108 @@
+/* Friends List Page Styling */
+
+/* Container for Friends List */
+.friendsListContainer {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f4f4f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table th, table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background-color: #007bff;
+    color: white;
+}
+
+table tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Button Styling */
+button {
+    background-color: #007bff;
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+button:focus {
+    outline: none;
+}
+
+/* Pending Friend Requests Styling */
+.pendingRequestsTable {
+    margin-top: 20px;
+    border-top: 2px solid #007bff;
+}
+
+.pendingRequestsTable th {
+    background-color: #ff9800;
+    color: white;
+}
+
+.pendingRequestsTable tr:hover {
+    background-color: #fff3e0;
+}
+
+/* Accepted Friends Styling */
+.acceptedFriendsTable {
+    margin-top: 20px;
+    border-top: 2px solid #28a745;
+}
+
+.acceptedFriendsTable th {
+    background-color: #28a745;
+    color: white;
+}
+
+.acceptedFriendsTable tr:hover {
+    background-color: #e9f7e7;
+}
+
+/* Header Styling */
+h3 {
+    font-size: 1.8em;
+    color: #333;
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+
+h2 {
+    font-size: 2.2em;
+    color: #007bff;
+    margin-bottom: 20px;
+}
+
+/* Friend Request Sent Date Styling */
+td span {
+    font-size: 0.9em;
+    color: #555;
+    display: block;
+    margin-top: 5px;
+}

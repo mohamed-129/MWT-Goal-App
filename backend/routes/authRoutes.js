@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const router = express.Router();
 
+
 // JWT Secret Key
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret_key"; // Use environment variable for security
 
@@ -109,6 +110,20 @@ router.post("/reset-password", async (req, res) => {
   } catch (error) {
     res.render("reset-password", { title: "Reset Password", errors: [{ msg: "An error occurred. Please try again." }], token: null });
   }
+
+// Authentication routes
+router.post("/register", registerUser); // Route for registration (POST)
+router.post("/login", loginUser); // Route for login (POST)
+
+// Render the register page (GET request)
+router.get("/register", (req, res) => {
+  res.render("register"); // Renders the register.pug template
+});
+
+// Render the login page (GET request)
+router.get("/login", (req, res) => {
+  res.render("login"); // Renders the login.pug template
+
 });
 
 module.exports = router;
