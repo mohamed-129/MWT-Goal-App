@@ -1,82 +1,104 @@
 const Goal = require("../models/goal");
 const { validationResult } = require("express-validator");
 
+// Add a new goal
 const addGoal = async (req, res) => {
-  // Check for validation errors
   const errors = validationResult(req);
   const formData = req.body;
-  // Debugging
-  console.log("Title:", formData.title);
-  console.log("Description:", formData.description);
-  console.log("Deadline:", formData.deadline);
+
+  // Log form data for debugging
+  console.log("Form Data:", formData);
+
   if (!errors.isEmpty()) {
-    console.log(errors.errors);
-    // Render the add goal page with error data
+    console.log("Validation Errors:", errors.errors);
+    // Render the add goal page with validation errors and form data
     return res.render("add_goal", {
       errors: errors.errors,
-      goalTitle: formData.title,
-      goalDescription: formData.description,
-      goalDeadline: formData.deadline,
+      goalTitle: formData.title || "",
+      goalDescription: formData.description || "",
+      goalDeadline: formData.deadline || "",
     });
   }
-  // Create goal if no errors
+
   try {
+    // Create a new goal and associate it with the authenticated user
     const { title, description, deadline } = req.body;
-    const newGoal = await Goal.create({ ...req.body, user: req.user.id });
-    res.status(201).json(newGoal);
+    const newGoal = await Goal.create({
+      title,
+      description,
+      deadline,
+      user: req.user.id,
+    });
+    res.redirect("/api/goals"); // Redirect to the goals list after adding
   } catch (err) {
-    res.status(500).json({ err: "Error adding goal" });
-    console.log(req.user);
+    console.error("Error adding goal:", err);
+    res.status(500).render("error", { message: "Error adding goal" });
   }
 };
 
+// Fetch goals for the authenticated user
 const getGoals = async (req, res) => {
   try {
-    const goals = await Goal.find({ user: req.user.id });
-    res.json(goals);
+    const goals = await Goal.find({ user: req.user.id }); // Fetch user's goals
+    res.render("view_goals", {
+      title: "Goals",
+      goals,
+      user: req.user.username,
+    });
   } catch (err) {
-    res.status(500).json({ err: "Error fetching goals" });
+    console.error("Error fetching goals:", err);
+    res.status(500).render("error", { message: "Error fetching goals" });
   }
 };
 
+// Share a goal with another user
 const shareGoal = async (req, res) => {
   try {
     const { goalId, friendId } = req.body;
 
     const goal = await Goal.findById(goalId);
 
+    // Check if the goal exists and belongs to the authenticated user
     if (!goal || goal.user.toString() !== req.user.id) {
       return res.status(404).json({ message: "Goal not found" });
     }
 
-    // Push the friend's ID to the sharedWith array if not already present
+    // Add friend's ID to the sharedWith array if not already present
     if (!goal.sharedWith.includes(friendId)) {
       goal.sharedWith.push(friendId);
     }
 
     await goal.save();
-    res.json({ message: "Goal shared" });
+    res.redirect("/goals"); // Redirect to the goals list
   } catch (err) {
-    res.status(500).json({ err: "Error sharing goal" });
+    console.error("Error sharing goal:", err);
+    res.status(500).render("error", { message: "Error sharing goal" });
   }
 };
 
+// Fetch shared goals for the authenticated user
 const getSharedGoals = async (req, res) => {
   try {
-    // Find all goals where the logged-in user's ID is in the sharedWith array
     const sharedGoals = await Goal.find({
-      sharedWith: req.user.id, // Check if the user ID is in the sharedWith array
+      sharedWith: req.user.id, // Check if the user is in the sharedWith array
     });
 
-    // If no shared goals are found, return an error message
+    // Render the shared goals or send a message if no goals are found
     if (sharedGoals.length === 0) {
-      return res.status(404).json({ message: "No shared goals found" });
+      return res.render("shared_goals", {
+        title: "Shared Goals",
+        message: "No shared goals found",
+        sharedGoals: [],
+      });
     }
 
-    // Return the shared goals to the user
-    res.json(sharedGoals);
+    res.render("shared_goals", {
+      title: "Shared Goals",
+      sharedGoals,
+    });
   } catch (err) {
-    res.status(500).json({ err: "Error fetching shared goals" });
+    console.error("Error fetching shared goals:", err);
+    res.status(500).render("error", { message: "Error fetching shared goals" });
   }
 };
 

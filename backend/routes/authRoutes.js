@@ -1,11 +1,12 @@
 const express = require("express");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const User = require("../models/user");
 const router = express.Router();
-
-// JWT Secret Key
-const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret_key"; // Use environment variable for security
+const {
+  registerUser,
+  loginUser,
+  forgotPassword,
+  resetPassword,
+  renderResetPasswordPage,
+} = require("../controllers/auth"); // Import functions from auth.js
 
 // Render Login Form (GET)
 router.get("/login", (req, res) => {
@@ -13,41 +14,7 @@ router.get("/login", (req, res) => {
 });
 
 // Login Route (POST)
-router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-  try {
-    const user = await User.findOne({ email });
-    if (!user)
-      return res
-        .status(404)
-        .render("login", {
-          title: "Login",
-          errors: [{ msg: "User not found." }],
-        });
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch)
-      return res
-        .status(400)
-        .render("login", {
-          title: "Login",
-          errors: [{ msg: "Invalid credentials." }],
-        });
-
-    const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "1h" });
-    res.cookie("authToken", token, {
-      httpOnly: true, // Secure the cookie
-      maxAge: 3600000, // 1 hour
-    });
-
-    res.status(200).redirect("/"); // Redirect to the home page
-  } catch (error) {
-    res.status(500).render("login", {
-      title: "Login",
-      errors: [{ msg: "Error logging in. Please try again." }],
-    });
-  }
-});
+router.post("/login", loginUser); // Use the loginUser function from auth.js
 
 // Render Registration Form (GET)
 router.get("/register", (req, res) => {
@@ -55,129 +22,20 @@ router.get("/register", (req, res) => {
 });
 
 // Registration Route (POST)
-router.post("/register", async (req, res) => {
-  const { username, email, password } = req.body;
-  try {
-    const existingUser = await User.findOne({ email });
-    if (existingUser)
-      return res
-        .status(400)
-        .render("register", {
-          title: "Register",
-          errors: [{ msg: "Email already exists." }],
-        });
+router.post("/register", registerUser); // Use the registerUser function from auth.js
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ username, email, password: hashedPassword });
-    await newUser.save();
-    res.redirect("/api/auth/login"); // Redirect to login page after successful registration
-  } catch (error) {
-    res.status(500).render("register", {
-      title: "Register",
-      errors: [{ msg: "Error registering user. Please try again." }],
-    });
-  }
-});
-
-// Forgot Password Page Route (GET)
+// Forgot Password Route (GET)
 router.get("/forgot-password", (req, res) => {
-  res.render("forgot-password", {
-    title: "Forgot Password",
-    errors: null,
-    message: null,
-  });
+  res.render("forgot-password", { title: "Forgot Password", errors: null });
 });
 
-// Forgot Password POST Route
-router.post("/forgot-password", async (req, res) => {
-  const { email } = req.body;
-  try {
-    const user = await User.findOne({ email });
-    if (!user)
-      return res.render("forgot-password", {
-        title: "Forgot Password",
-        errors: [{ msg: "Email not found." }],
-        message: null,
-      });
+// Forgot Password Route (POST)
+router.post("/forgot-password", forgotPassword); // Use the forgotPassword function from auth.js
 
-    const resetToken = Math.random().toString(36).substring(2, 15);
-    const resetTokenExpiry = Date.now() + 3600000; // Token valid for 1 hour
-    user.resetToken = resetToken;
-    user.resetTokenExpiry = resetTokenExpiry;
-    await user.save();
-
-    console.log(`Reset token for ${email}: ${resetToken}`); // Replace with email-sending logic
-    res.render("forgot-password", {
-      title: "Forgot Password",
-      errors: null,
-      message: "Reset token sent to your email.",
-    });
-  } catch (error) {
-    res.render("forgot-password", {
-      title: "Forgot Password",
-      errors: [{ msg: "An error occurred. Please try again." }],
-      message: null,
-    });
-  }
-});
-
-// Render Reset Password Form (GET)
-router.get("/reset-password/:token", async (req, res) => {
-  const { token } = req.params;
-  try {
-    const user = await User.findOne({
-      resetToken: token,
-      resetTokenExpiry: { $gt: Date.now() },
-    });
-    if (!user)
-      return res.render("reset-password", {
-        title: "Reset Password",
-        errors: [{ msg: "Invalid or expired token." }],
-        token: null,
-      });
-
-    res.render("reset-password", {
-      title: "Reset Password",
-      errors: null,
-      token,
-    });
-  } catch (error) {
-    res.render("reset-password", {
-      title: "Reset Password",
-      errors: [{ msg: "An error occurred." }],
-      token: null,
-    });
-  }
-});
+// Render Reset Password Page (GET)
+router.get("/reset-password/:token", renderResetPasswordPage); // Use renderResetPasswordPage
 
 // Reset Password (POST)
-router.post("/reset-password", async (req, res) => {
-  const { token, newPassword } = req.body;
-  try {
-    const user = await User.findOne({
-      resetToken: token,
-      resetTokenExpiry: { $gt: Date.now() },
-    });
-    if (!user)
-      return res.render("reset-password", {
-        title: "Reset Password",
-        errors: [{ msg: "Invalid or expired token." }],
-        token: null,
-      });
-
-    user.password = await bcrypt.hash(newPassword, 10);
-    user.resetToken = undefined;
-    user.resetTokenExpiry = undefined;
-    await user.save();
-
-    res.redirect("/api/auth/login"); // Redirect to login page
-  } catch (error) {
-    res.render("reset-password", {
-      title: "Reset Password",
-      errors: [{ msg: "An error occurred. Please try again." }],
-      token: null,
-    });
-  }
-});
+router.post("/reset-password", resetPassword); // Use the resetPassword function from auth.js
 
 module.exports = router;
