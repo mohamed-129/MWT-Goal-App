@@ -5,12 +5,26 @@ const mongoose = require("mongoose");
 //send freind request
 const sendFriendReq = async (req, res) => {
   try {
-    const { friendId } = req.body;
+    const { friendId, username } = req.body;
+
+    let userToAdd;
+
+    if (friendId) {
+      // If the user selected from the dropdown
+      userToAdd = await User.findById(friendId);
+    } else if (username) {
+      // If the user typed a username
+      userToAdd = await User.findOne({ username: username });
+    }
+
+    if (!userToAdd) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
     // Check if friend request already exists
     const existingReq = await Friend.findOne({
       user: req.user.id,
-      friend: friendId,
+      friend: userToAdd._id,
     });
 
     if (existingReq) {
@@ -22,11 +36,11 @@ const sendFriendReq = async (req, res) => {
     // Create the friend request
     const friendReq = await Friend.create({
       user: req.user.id,
-      friend: friendId,
+      friend: userToAdd._id,
       status: "pending",
     });
 
-    res.status(201).json(friendReq);
+    res.redirect("/api/friends");
   } catch (err) {
     res.status(500).json({
       error: err.message || "Error sending friend request",
@@ -84,17 +98,25 @@ const acceptFriendReq = async (req, res) => {
 //Freinds List
 const getFriends = async (req, res) => {
   try {
+    // Fetch accepted and pending friend requests
     const friends = await Friend.find({
       $or: [{ user: req.user.id }, { friend: req.user.id }],
-      status: "accepted",
     })
       .populate("user", "username email") // Populate with user details if needed
       .populate("friend", "username email"); // Populate with friend details if needed
 
-    res.json(friends);
+    // Filter out accepted friends
+    const acceptedFriends = friends.filter(
+      (friend) => friend.status === "accepted"
+    );
+    const pendingFriends = friends.filter(
+      (friend) => friend.status === "pending"
+    );
+
+    res.render("friends_list", { acceptedFriends, pendingFriends }); // Passing friends data to Pug template
   } catch (err) {
     console.error("Error fetching friends list:", err);
-    res.status(500).json({ error: "Error fetching friends list" });
+    res.status(500).send("Error fetching friends list");
   }
 };
 
@@ -118,7 +140,7 @@ const removeFriends = async (req, res) => {
       });
     }
 
-    res.json({ message: "Friend removed successfully" });
+    res.redirect("/api/friends"); // Redirect to the friends list after successful removal
   } catch (err) {
     console.error("Error removing friend:", err);
     res.status(500).json({ error: "Error removing friend" });

@@ -1,0 +1,15 @@
+extends layout
+
+block content
+  head
+    title Confirm Remove Friend
+    link(rel="stylesheet", href="/stylesheets/friends_list.css")
+
+  .confirmationContainer
+    h2 Are you sure you want to remove #{friend.username} from your friends list?
+    div.buttons
+      form(action=`/api/friends/${friend._id}`, method="DELETE")
+        input(type="hidden", name="_method", value="DELETE") 
+        button(type="submit") Yes, Remove Friend
+      a(href="/api/friends") 
+        button No, Go Back

@@ -1,0 +1,54 @@
+extends layout
+
+block content
+  head
+    title Friends List
+    link(rel="stylesheet", href="/stylesheets/friends_list.css")
+
+  .friendsListContainer
+    h2 Friends List
+    div.buttons
+      a(href="/api/friends/add") 
+        button Add Friend
+    
+
+    // Displaying accepted friends
+    if acceptedFriends && acceptedFriends.length > 0
+      h3 Accepted Friends
+      table.acceptedFriendsTable
+        thead
+          tr
+            th Name
+            th Actions
+        tbody
+          each friend in acceptedFriends
+            tr
+              td= friend.friend.username
+              td
+                a(href=`/api/friends/confirm_remove/${friend.friend._id}`)
+                    button Remove Friend
+                
+    else
+      p No accepted friends.
+
+    // Displaying pending requests
+    if pendingFriends && pendingFriends.length > 0
+      h3 Pending Friend Requests
+      table.pendingRequestsTable
+        thead
+          tr
+            th Name
+            th Request Sent
+            th Actions
+        tbody
+          each friend in pendingFriends
+            tr
+              td= friend.friend.username
+              td
+                span= friend.createdAt.toLocaleString()
+              td
+                button(onclick=`cancelRequest('${friend.friend._id}')`) Cancel Request
+    else
+      p No pending requests.
+
+  script(src="/scripts.js")

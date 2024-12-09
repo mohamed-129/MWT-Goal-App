@@ -54,13 +54,17 @@ li.dropdown:hover .dropdown-menu {
     display: block;
     opacity: 1;
 }
+/*                  General Page Styling                      */
+body {
+    background-color: #fcebe5;
+}
 /*                  Home Page CSS Styling                     */
 /* Home Page Container */
 .homePageContainer {
     text-align: center;
     padding: 20px;
     margin: 0 auto;
-    max-width: 800px;
+    max-width: 1150px;
     background-color: #f4f4f9;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
@@ -106,11 +110,17 @@ li.dropdown:hover .dropdown-menu {
 }
 
 /* Styling for the Banner Halves */
-.banner .half1 img,
+.banner .half1 img {
+    width: 100%;
+    height: 200px;
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+}
 .banner .half2 img {
     width: 100%;
     height: 200px;
-    border-radius: 0;
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
 }
 
 /* Styling for the Logo */
@@ -246,10 +256,6 @@ input.btn-primary {
 input.btn-primary:hover {
     background-color: #0056b3;
 }
-<<<<<<< HEAD
-
-
-=======
 /*                View Goal CSS Styling                  */
 /* Container for Goals */
 .goalsContainer {
@@ -308,4 +314,3 @@ input.btn-primary:hover {
     color: #888;
     margin-top: 20px;
 }
->>>>>>> 13f1ddfd2cea7fef11c9e8ae9c599037ddf175a5

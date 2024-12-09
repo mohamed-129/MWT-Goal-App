@@ -1,13 +1,20 @@
 const express = require("express");
 const path = require("path");
 const mongoose = require("mongoose");
-// JWT_SECRET = dfahjkhfasiuwjfhdsu;
+require("dotenv").config();
+const cookieParser = require("cookie-parser");
+const methodOverride = require("method-override");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+// Use method-override to support "_method" field in forms
+app.use(methodOverride("_method"));
+
+// Middleware to parse cookies
+app.use(cookieParser());
 
 // Database Connection
 mongoose
