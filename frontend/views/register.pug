@@ -12,7 +12,7 @@ block content
             if errors && errors.some(e => e.path === 'username')
                 span(style="color: red;") #{errors.find(e => e.path === 'username').msg}
             else
-                span.checkmark &#10004
+                span.checkmark ✔
 
         .form-group
             label(for="email") Email:
@@ -20,7 +20,7 @@ block content
             if errors && errors.some(e => e.path === 'email')
                 span(style="color: red;") #{errors.find(e => e.path === 'email').msg}
             else
-                span.checkmark &#10004
+                span.checkmark ✔
 
         .form-group
             label(for="password") Password:
@@ -28,27 +28,10 @@ block content
             if errors && errors.some(e => e.path === 'password')
                 span(style="color: red;") #{errors.find(e => e.path === 'password').msg}
             else
-                span.checkmark &#10004
+                span.checkmark ✔
 
         input.btn.btn-primary(type="submit", value="Register")
 
     //- Link to login if the user already has an account
     p
         a(href="/api/auth/login") Already have an account? Login
-
-  h1 Register
-  form(action="/api/auth/register", method="POST")
-    div
-      label(for="username") Username:
-      input(type="text", id="username", name="username", required)
-    div
-      label(for="email") Email:
-      input(type="email", id="email", name="email", required)
-    div
-      label(for="password") Password:
-      input(type="password", id="password", name="password", required)
-    div
-      button(type="submit") Register
-  p
-    a(href="/api/auth/login") Already have an account? Login here
-
