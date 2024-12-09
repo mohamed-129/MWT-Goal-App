@@ -1,6 +1,7 @@
 extends layout
 
 block content
+
     h1 Register for Aspire
 
     //- Form for registering
@@ -34,3 +35,20 @@ block content
     //- Link to login if the user already has an account
     p
         a(href="/api/auth/login") Already have an account? Login
+
+  h1 Register
+  form(action="/api/auth/register", method="POST")
+    div
+      label(for="username") Username:
+      input(type="text", id="username", name="username", required)
+    div
+      label(for="email") Email:
+      input(type="email", id="email", name="email", required)
+    div
+      label(for="password") Password:
+      input(type="password", id="password", name="password", required)
+    div
+      button(type="submit") Register
+  p
+    a(href="/api/auth/login") Already have an account? Login here
+

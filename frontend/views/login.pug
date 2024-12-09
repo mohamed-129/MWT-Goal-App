@@ -1,0 +1,17 @@
+extends layout
+
+block content
+  h1 Login
+  form#loginForm(action="/api/auth/login", method="POST")
+    div
+      label(for="email") Email:
+      input(type="email", id="email", name="email", required)
+    div
+      label(for="password") Password:
+      input(type="password", id="password", name="password", required)
+    div
+      button(type="submit") Login
+  p
+    a(href="/api/auth/register") Don't have an account? Register here
+
+
