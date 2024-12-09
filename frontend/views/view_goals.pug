@@ -1,5 +1,6 @@
 extends layout 
 
+
 block content
     //- Add user's name before the title
     h1.viewGoals #{user} #{title}
@@ -9,6 +10,15 @@ block content
         .goalsContainer
             //- Loop through all goals
             each goal in goals
+
+block content 
+    //- add users name before title
+    h1.viewGoals #{user} #{title}
+    if goals && goals.length
+        .goalsContainer
+            //- Loop through all goals
+            each goal in goals 
+
                 .goalBox
                     h3 #{goal.title}
                     p #{goal.description}
