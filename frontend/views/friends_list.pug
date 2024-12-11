@@ -8,9 +8,8 @@ block content
   .friendsListContainer
     h2 Friends List
     div.buttons
-      a(href="/api/friends/add") 
+      a(href="/api/friends/add")
         button Add Friend
-    
 
     // Displaying accepted friends
     if acceptedFriends && acceptedFriends.length > 0
@@ -23,17 +22,17 @@ block content
         tbody
           each friend in acceptedFriends
             tr
-              td= friend.friend.username
+              // Display the correct friend's name
+              td= friend.username  
               td
-                a(href=`/api/friends/confirm_remove/${friend.friend._id}`)
+                a(href=`/api/friends/confirm_remove/${friend._id}`)
                     button Remove Friend
-                
     else
       p No accepted friends.
 
-    // Displaying pending requests
-    if pendingFriends && pendingFriends.length > 0
-      h3 Pending Friend Requests
+    // Displaying pending received friend requests
+    if pendingReceivedRequests && pendingReceivedRequests.length > 0
+      h3 Pending Friend Requests (Received)
       table.pendingRequestsTable
         thead
           tr
@@ -41,14 +40,36 @@ block content
             th Request Sent
             th Actions
         tbody
-          each friend in pendingFriends
+          each request in pendingReceivedRequests
             tr
-              td= friend.friend.username
+              td= request.user.username
               td
-                span= friend.createdAt.toLocaleString()
+                span= request.createdAt.toLocaleString()
               td
-                button(onclick=`cancelRequest('${friend.friend._id}')`) Cancel Request
+                form(action=`/api/friends/accept/${request._id}?_method=PUT`, method="POST")
+                  button(type="submit") Accept
+                form(action=`/api/friends/decline/${request._id}?_method=DELETE`, method="POST")
+                  button(type="submit") Decline
     else
-      p No pending requests.
+      p No pending received requests.
 
-
+    // Displaying sent friend requests
+    if sentRequests && sentRequests.length > 0
+      h3 Sent Friend Requests
+      table.sentRequestsTable
+        thead
+          tr
+            th Name
+            th Request Sent
+            th Actions
+        tbody
+          each request in sentRequests
+            tr
+              td= request.friend.username
+              td
+                span= request.createdAt.toLocaleString()
+              td
+                form(action=`/api/friends/${request.friend._id}?_method=DELETE`, method="POST")
+                  button(type="submit") Cancel Request
+    else
+      p No sent requests.

@@ -38,4 +38,9 @@ router.get("/reset-password/:token", renderResetPasswordPage); // Use renderRese
 // Reset Password (POST)
 router.post("/reset-password", resetPassword); // Use the resetPassword function from auth.js
 
+// Render "Not Logged In" Page
+router.get("/not-logged-in", (req, res) => {
+  res.render("not_logged_in", { title: "Not Logged In" });
+});
+
 module.exports = router;

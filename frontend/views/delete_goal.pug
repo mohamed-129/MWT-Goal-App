@@ -1,0 +1,10 @@
+extends layout
+
+block content
+  h1 Delete Goal
+  p Are you sure you want to delete the goal "#{goal.title}"?
+  p This action cannot be undone.
+
+  form(action=`/api/goals/delete/${goal._id}`, method="POST")
+    button(type="submit" class="btn btn-danger") Yes, Delete
+    a(href="/goals" class="btn btn-secondary") Cancel

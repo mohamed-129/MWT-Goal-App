@@ -1,0 +1,51 @@
+/* Main Stylesheet */
+
+/* Container for the not-logged-in message */
+.not-logged-in-container {
+  text-align: center;
+  padding: 40px;
+  font-family: Arial, sans-serif;
+}
+
+.not-logged-in-container h1 {
+  font-size: 36px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.not-logged-in-container p {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+/* Button container styles */
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+/* Button styles */
+.btn {
+  padding: 12px 25px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.login-btn {
+  background-color: #4CAF50; /* Green */
+  color: white;
+}
+
+.register-btn {
+  background-color: #008CBA; /* Blue */
+  color: white;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}

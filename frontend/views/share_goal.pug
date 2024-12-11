@@ -1,0 +1,20 @@
+extends layout
+
+block content
+  .share-goal-page
+    if goal
+      h1 Share Goal: #{goal.title}
+      p Please select friends to share this goal with:
+
+      form(action="/api/goals/share/:goalId", method="POST")
+        input(type="hidden", name="goalId", value=goal._id)
+
+        .form-group
+          select(name="friendId", class="friend-select")
+            each friend in friends
+              option(value=friend._id)= friend.username
+
+        button(type="submit", class="share-button") Share Goal
+    else
+      h1 Goal not found
+      p The goal you are trying to share does not exist or cannot be accessed.

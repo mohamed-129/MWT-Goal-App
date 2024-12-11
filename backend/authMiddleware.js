@@ -1,19 +1,20 @@
 const jwt = require("jsonwebtoken");
 
-const authMiddleware = (req, res, next) => {
-  const token = req.cookies.authToken; // Get token from cookies
+const ensureAuthenticated = (req, res, next) => {
+  const token = req.cookies.authToken;
 
   if (!token) {
-    return res.status(401).json({ error: "No token provided" });
+    return res.redirect("/api/auth/not-logged-in"); // Redirect to "Not Logged In" page
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verify the token
-    req.user = decoded; // Attach decoded user data to the request object
-    next(); // Proceed to the next middleware/route handler
-  } catch (error) {
-    res.status(403).json({ error: "Invalid token" });
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch (err) {
+    console.error("Authentication Error:", err);
+    res.redirect("/not-logged-in");
   }
 };
 
-module.exports = authMiddleware;
+module.exports = ensureAuthenticated;
