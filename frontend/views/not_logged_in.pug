@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  head
+    title Not Logged In
+    link(rel="stylesheet", href="/stylesheets/not_logged_in.css")
+
+  .not-logged-in-container
+    h1 You are not logged in
+    p Would you like to log in or register?
+    .button-container
+      a(href="/api/auth/login", class="btn login-btn") Log In
+      | or
+      a(href="/api/auth/register", class="btn register-btn") Register

@@ -7,9 +7,11 @@ block content
 
   .confirmationContainer
     h2 Are you sure you want to remove #{friend.username} from your friends list?
-    div.buttons
-      form(action=`/api/friends/${friend._id}`, method="DELETE")
-        input(type="hidden", name="_method", value="DELETE") 
-        button(type="submit") Yes, Remove Friend
-      a(href="/api/friends") 
-        button No, Go Back
+
+  .buttons
+    // Form to handle friend removal with the DELETE method
+    form(action=`/api/friends/${friend._id}?_method=DELETE`, method="POST")
+      button(type="submit") Yes, Remove Friend
+
+    // Link to go back to the friends list
+    a(href="/api/friends") No, Go Back

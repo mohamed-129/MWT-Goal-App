@@ -9,7 +9,9 @@ const {
   renderAddGoalForm,
   addGoal,
   shareGoal,
-  getSharedGoals,
+  renderShareGoalPage,
+  renderDeleteGoalPage,
+  deleteGoal,
 } = require("../controllers/goal");
 
 // Middleware for validating form parameters
@@ -28,7 +30,11 @@ router
   .route("/add")
   .get((req, res) => res.render("add_goal")) // Render the form
   .post(validateGoal, addGoal); // Add a new goal
-router.post("/share", shareGoal); // Share a goal
-router.get("/shared", getSharedGoals); // Fetch shared goals
+router.post("/share/:goalId", shareGoal); // Share a goal
+router.get("/shared/:goalId", renderShareGoalPage); // Fetch shared goals
+
+// Delete goal
+router.get("/delete/:goalId", renderDeleteGoalPage);
+router.post("/delete/:goalId", deleteGoal);
 
 module.exports = router;

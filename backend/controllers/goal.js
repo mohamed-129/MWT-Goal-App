@@ -1,4 +1,5 @@
 const Goal = require("../models/goal");
+const User = require("../models/user");
 const { validationResult } = require("express-validator");
 
 // Add a new goal
@@ -77,7 +78,7 @@ const shareGoal = async (req, res) => {
     }
 
     await goal.save();
-    res.redirect("/goals"); // Redirect to the goals list
+    res.redirect("/api/goals"); // Redirect to the goals list
   } catch (err) {
     console.error("Error sharing goal:", err);
     res.status(500).render("error", { message: "Error sharing goal" });
@@ -85,29 +86,86 @@ const shareGoal = async (req, res) => {
 };
 
 // Fetch shared goals for the authenticated user
-const getSharedGoals = async (req, res) => {
+const renderShareGoalPage = async (req, res) => {
   try {
-    const sharedGoals = await Goal.find({
-      sharedWith: req.user.id, // Check if the user is in the sharedWith array
-    });
+    const { goalId } = req.params;
 
-    // Render the shared goals or send a message if no goals are found
-    if (sharedGoals.length === 0) {
-      return res.render("shared_goals", {
-        title: "Shared Goals",
-        message: "No shared goals found",
-        sharedGoals: [],
+    // Fetch the goal by ID
+    const goal = await Goal.findById(goalId);
+
+    // Verify if the goal exists and belongs to the authenticated user
+    if (!goal || goal.user.toString() !== req.user.id) {
+      return res.status(404).render("error", {
+        message: "Goal not found or unauthorized",
+        error: { status: 404 },
       });
     }
 
-    res.render("shared_goals", {
-      title: "Shared Goals",
-      sharedGoals,
-    });
+    // Fetch friends (replace this with your actual friends-fetching logic)
+    const friends = await User.find({ _id: { $ne: req.user.id } });
+
+    // Render the page with goal and friends
+    res.render("share_goal", { goal, friends });
   } catch (err) {
-    console.error("Error fetching shared goals:", err);
-    res.status(500).render("error", { message: "Error fetching shared goals" });
+    console.error("Error rendering share goal page:", err);
+    res.status(500).render("error", {
+      message: "Error rendering share goal page",
+      error: err,
+    });
   }
 };
 
-module.exports = { addGoal, getGoals, shareGoal, getSharedGoals };
+const renderDeleteGoalPage = async (req, res) => {
+  try {
+    const { goalId } = req.params;
+    const goal = await Goal.findById(goalId);
+
+    if (!goal || goal.user.toString() !== req.user.id) {
+      return res.status(404).render("error", {
+        message: "Goal not found or unauthorized",
+        error: { status: 404 },
+      });
+    }
+
+    res.render("delete_goal", { goal });
+  } catch (err) {
+    console.error("Error rendering delete goal page:", err);
+    res.status(500).render("error", {
+      message: "Error rendering delete goal page",
+      error: err,
+    });
+  }
+};
+
+const deleteGoal = async (req, res) => {
+  try {
+    const { goalId } = req.params;
+
+    const goal = await Goal.findById(goalId);
+
+    if (!goal || goal.user.toString() !== req.user.id) {
+      return res.status(404).render("error", {
+        message: "Goal not found or unauthorized",
+        error: { status: 404 },
+      });
+    }
+
+    await Goal.findByIdAndDelete(goalId);
+    res.redirect("/api/goals");
+  } catch (err) {
+    console.error("Error deleting goal:", err);
+    res.status(500).render("error", {
+      message: "Error deleting goal",
+      error: err,
+    });
+  }
+};
+
+module.exports = {
+  addGoal,
+  getGoals,
+  shareGoal,
+  renderShareGoalPage,
+  deleteGoal,
+  renderDeleteGoalPage,
+};
