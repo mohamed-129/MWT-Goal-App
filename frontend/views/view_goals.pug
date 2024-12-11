@@ -1,17 +1,23 @@
-extends layout 
+extends layout
 
+block content
+  //- Add user's name before title
+  h1.viewGoals #{user}'s - #{title}
 
-block content 
-    //- add users name before title
-    h1.viewGoals #{user} #{title}
-    if goals && goals.length
-        .goalsContainer
-            //- Loop through all goals
-            each goal in goals 
+  //- Check if there are goals
+  if goals && goals.length
+    .goalsContainer
+      //- Loop through all goals
+      each goal in goals
+        .goalBox
+          h3 #{goal.title}
+          p #{goal.description}
+          p #{goal.deadline}
+          
+          //- Add buttons for sharing and deleting the goal
+          .goal-actions
+            a(href=`/api/goals/shared/${goal._id}`, class="btn share-btn") Share Goal
+            a(href=`/api/goals/delete/${goal._id}`, class="btn delete-btn") Delete Goal
 
-                .goalBox
-                    h3 #{goal.title}
-                    p #{goal.description}
-                    p #{goal.deadline}
-    else
-        p.noGoals No goals found.
+  else
+    p.noGoals No goals found.
