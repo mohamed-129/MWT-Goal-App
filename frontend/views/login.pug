@@ -1,36 +1,38 @@
 extends layout
 
 block content
+    head 
+    link(rel="stylesheet", href="/stylesheets/login.css")
+    .login
+        h1 Login to Aspire
+        .loginForm
+            //- Form for logging in
+            form(method="POST", action="/api/auth/login")
+                .form-group
+                    label(for="email") Email:
+                    input.form-control(type="email" id="email" name="email" required)
+                    if errors && errors.some(e => e.path === 'email')
+                        span(style="color: red;") #{errors.find(e => e.path === 'email').msg}
+                    else
+                        span.checkmark &#10004
 
-    h1 Login to Aspire
+                .form-group
+                    label(for="password") Password:
+                    input.form-control(type="password" id="password" name="password" required)
+                    if errors && errors.some(e => e.path === 'password')
+                        span(style="color: red;") #{errors.find(e => e.path === 'password').msg}
+                    else
+                        span.checkmark &#10004
 
-    //- Form for logging in
-    form(method="POST", action="/api/auth/login")
-        .form-group
-            label(for="email") Email:
-            input.form-control(type="email" id="email" name="email" required)
-            if errors && errors.some(e => e.path === 'email')
-                span(style="color: red;") #{errors.find(e => e.path === 'email').msg}
-            else
-                span.checkmark &#10004
+                input.btn.btn-primary(type="submit", value="Login")
 
-        .form-group
-            label(for="password") Password:
-            input.form-control(type="password" id="password" name="password" required)
-            if errors && errors.some(e => e.path === 'password')
-                span(style="color: red;") #{errors.find(e => e.path === 'password').msg}
-            else
-                span.checkmark &#10004
+            //- Link to "Forgot Password"
+            p
+                a(href="/api/auth/forgot-password") Forgot your password?
 
-        input.btn.btn-primary(type="submit", value="Login")
-
-    //- Link to "Forgot Password"
-    p
-        a(href="/api/auth/forgot-password") Forgot your password?
-
-    //- Link to register if the user does not have an account
-    p
-        a(href="/api/auth/register") Don't have an account? Register
+            //- Link to register if the user does not have an account
+            p
+                a(href="/api/auth/register") Don't have an account? Register
 
 
 

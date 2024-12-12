@@ -4,11 +4,14 @@ const { validationResult } = require("express-validator");
 
 // Add a new goal
 const addGoal = async (req, res) => {
+  if (!req.user) {
+    return res.redirect("/login")
+  }
   const errors = validationResult(req);
   const formData = req.body;
 
   // Log form data for debugging
-  console.log("Form Data:", formData);
+  console.log("Add Goal - Form Data:", formData);
 
   if (!errors.isEmpty()) {
     console.log("Validation Errors:", errors.errors);
@@ -30,6 +33,7 @@ const addGoal = async (req, res) => {
       deadline,
       user: req.user.id,
     });
+    console.log("New Goal Created:", newGoal)
     res.redirect("/api/goals"); // Redirect to the goals list after adding
   } catch (err) {
     console.error("Error adding goal:", err);
@@ -39,7 +43,11 @@ const addGoal = async (req, res) => {
 
 // Fetch goals for the authenticated user
 const getGoals = async (req, res) => {
+  if (!req.user) {
+    return res.redirect("login")
+  }
   try {
+    console.log("Logged in user", req.user)
     const goals = await Goal.find({ user: req.user.id }); // Fetch user's goals
     res.render("view_goals", {
       title: "Goals",
