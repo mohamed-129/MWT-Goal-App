@@ -6,7 +6,6 @@ block content
     .register
         h1 Register for Aspire
         .registerForm
-            //- Form for registering
             form(method="POST", action="/api/auth/register")
                 .form-group
                     label(for="username") Username:
@@ -33,7 +32,5 @@ block content
                         span.checkmark ✔
 
                 input.btn.btn-primary(type="submit", value="Register")
-
-            //- Link to login if the user already has an account
             p
                 a(href="/api/auth/login") Already have an account? Login
