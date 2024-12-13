@@ -1,33 +1,30 @@
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const crypto = require("crypto");
+const nodemailer = require("nodemailer");
 
-// Register User
 const registerUser = async (req, res) => {
   try {
     const { username, email, password } = req.body;
 
-    // Check if the user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "Email already exists" });
     }
 
-    // Hash the password before saving
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create and save the new user
     const newUser = new User({ username, email, password: hashedPassword });
     await newUser.save();
 
-    // Redirect to the login page after successful registration
     res.status(201).redirect("/api/auth/login");
   } catch (err) {
-    res.status(500).json({ err: "Error registering user" });
+    console.error("Error during user registration:", err); 
+    res.status(500).json({ err: "Error registering user. Please try again later." });
   }
 };
 
-// Login User
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -37,49 +34,56 @@ const loginUser = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(401).json({ error: "Invalid credentials" });
 
-    // Generate JWT token
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "24h", // You can adjust this time if necessary
-    });
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "24h" });
 
-    // Set the token as a cookie (for client-side access)
     res.cookie("authToken", token, {
-      httpOnly: false, // Make sure it's true to prevent JS access
-      secure: process.env.NODE_ENV === "production", // Only for production over HTTPS
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 24 * 60 * 60 * 1000,
     });
 
-    // Redirect to home or another page after successful login
-    res.redirect("/"); // Redirect to the home page or wherever needed
+    res.redirect("/");
   } catch (err) {
     console.error("Error logging in user:", err);
-    res.status(500).json({ err: "Error logging in user" });
+    res.status(500).json({ err: "Error logging in user. Please try again later." });
   }
 };
 
-// Forgot Password
 const forgotPassword = async (req, res) => {
   const { email } = req.body;
   try {
     const user = await User.findOne({ email });
     if (!user) return res.status(404).json({ message: "Email not found" });
 
-    const resetToken = Math.random().toString(36).substring(2, 15);
-    const resetTokenExpiry = Date.now() + 3600000; // Token valid for 1 hour
+    const resetToken = crypto.randomBytes(32).toString("hex");
+    const resetTokenExpiry = Date.now() + 3600000; // 1 hour
     user.resetToken = resetToken;
     user.resetTokenExpiry = resetTokenExpiry;
     await user.save();
 
-    console.log(`Reset token for ${email}: ${resetToken}`); // Replace with email-sending logic
-    res.status(200).json({
-      message: "Reset token sent to your email.",
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
     });
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "Password Reset",
+      text: `Here is your password reset token: ${resetToken}. It is valid for 1 hour.`,
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    res.status(200).json({ message: "Reset token sent to your email." });
   } catch (err) {
     res.status(500).json({ err: "Error processing forgot password request" });
   }
 };
 
-// Reset Password
 const resetPassword = async (req, res) => {
   const { token, newPassword } = req.body;
   try {
@@ -87,21 +91,19 @@ const resetPassword = async (req, res) => {
       resetToken: token,
       resetTokenExpiry: { $gt: Date.now() },
     });
-    if (!user)
-      return res.status(400).json({ message: "Invalid or expired token" });
+    if (!user) return res.status(400).json({ message: "Invalid or expired token" });
 
     user.password = await bcrypt.hash(newPassword, 10);
     user.resetToken = undefined;
     user.resetTokenExpiry = undefined;
     await user.save();
 
-    res.status(200).json({ message: "Password reset successful" });
+    res.redirect("/api/auth/login");
   } catch (err) {
-    res.status(500).json({ err: "Error resetting password" });
+    res.status(500).json({ err: "Error resetting password. Please try again later." });
   }
 };
 
-// Reset Password Page (GET) - render reset form
 const renderResetPasswordPage = async (req, res) => {
   const { token } = req.params;
   try {
@@ -116,11 +118,7 @@ const renderResetPasswordPage = async (req, res) => {
         token: null,
       });
 
-    res.render("reset-password", {
-      title: "Reset Password",
-      errors: null,
-      token,
-    });
+    res.render("reset-password", { title: "Reset Password", errors: null, token });
   } catch (err) {
     res.render("reset-password", {
       title: "Reset Password",
