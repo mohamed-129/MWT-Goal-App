@@ -6,39 +6,33 @@ const {
   forgotPassword,
   resetPassword,
   renderResetPasswordPage,
-} = require("../controllers/auth"); // Import functions from auth.js
+} = require("../controllers/auth"); 
 
-// Render Login Form (GET)
+
 router.get("/login", (req, res) => {
   res.render("login", { title: "Login", errors: null });
 });
 
-// Login Route (POST)
-router.post("/login", loginUser); // Use the loginUser function from auth.js
+router.post("/login", loginUser); 
 
-// Render Registration Form (GET)
 router.get("/register", (req, res) => {
   res.render("register", { title: "Register", errors: null });
 });
 
-// Registration Route (POST)
-router.post("/register", registerUser); // Use the registerUser function from auth.js
+router.post("/register", registerUser); 
 
-// Forgot Password Route (GET)
+
 router.get("/forgot-password", (req, res) => {
   res.render("forgot-password", { title: "Forgot Password", errors: null });
 });
 
-// Forgot Password Route (POST)
-router.post("/forgot-password", forgotPassword); // Use the forgotPassword function from auth.js
+router.post("/forgot-password", forgotPassword);
 
-// Render Reset Password Page (GET)
-router.get("/reset-password/:token", renderResetPasswordPage); // Use renderResetPasswordPage
+router.get("/reset-password/:token", renderResetPasswordPage); 
 
-// Reset Password (POST)
-router.post("/reset-password", resetPassword); // Use the resetPassword function from auth.js
+router.post("/reset-password", resetPassword); 
 
-// Render "Not Logged In" Page
+
 router.get("/not-logged-in", (req, res) => {
   res.render("not_logged_in", { title: "Not Logged In" });
 });
